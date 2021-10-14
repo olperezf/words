@@ -36,7 +36,7 @@ gem 'haml-rails', '~> 2.0', '>= 2.0.1'
 
 gem 'rexml', '~> 3.2', '>= 3.2.5'
 
-
+gem 'simple_form'
 
 group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
