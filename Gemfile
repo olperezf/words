@@ -39,6 +39,7 @@ gem 'rexml', '~> 3.2', '>= 3.2.5'
 gem 'simple_form'
 
 group :development, :test do
+  gem 'pry-rails'
   gem 'rspec-rails', '~> 5.0.0'
   gem 'rails-controller-testing'
 end
