@@ -16,5 +16,7 @@
         %td=word.id
         %td=word.content
         %td=word.language&.name
-        %td=link_to('show',word_url(word), class: 'btn btn-primary')
+        %td
+          =link_to('Show',word_url(word), class: 'btn btn-primary')
+          =link_to('Edit',edit_word_url(word), class: 'btn btn-primary')
 
