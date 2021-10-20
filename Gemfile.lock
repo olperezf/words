@@ -107,6 +107,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
+    language_list (1.2.1)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -262,6 +263,7 @@ DEPENDENCIES
   factory_bot_rails
   haml-rails (~> 2.0, >= 2.0.1)
   jbuilder (~> 2.7)
+  language_list (~> 1.2, >= 1.2.1)
   listen (~> 3.3)
   pg (~> 1.1, >= 1.1.4)
   pry-rails
