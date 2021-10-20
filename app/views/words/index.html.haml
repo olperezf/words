@@ -15,6 +15,6 @@
       %tr
         %td=word.id
         %td=word.content
-        %td=word.language
+        %td=word.language&.name
         %td=link_to('show',word_url(word), class: 'btn btn-primary')
 
