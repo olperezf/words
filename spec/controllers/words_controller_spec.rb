@@ -43,7 +43,7 @@ RSpec.describe WordsController, type: :controller do
     
     context 'valid params' do
       let(:params) do
-        {word: { content: 'cat', language: 'English' } } 
+        {word: { content: 'cat' } } 
       end  
       it 'creates new word' do
         expect { subject }.to change(Word, :count).from(0).to(1)
@@ -52,7 +52,7 @@ RSpec.describe WordsController, type: :controller do
     
     context 'invalid params' do
       let(:params) do
-        {word: { content: 'cat' } } 
+        {word: { content: '' } } 
       end  
       it 'does not create new word' do
         expect { subject }.not_to change(Word, :count)
