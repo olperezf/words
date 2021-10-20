@@ -76,6 +76,55 @@ RSpec.describe WordsController, type: :controller do
     it 'renders the show template' do 
       expect(response).to render_template(:show)
     end
+  end
+  
+  describe 'GET edit' do
+    before { get :edit, params: params }
+    
+    let(:params) do
+      { id: word.id }
+    end  
+    let!(:word) { create(:word) }
+
+    it 'assigns @word' do 
+      expect(assigns(:word)).to eq(word)
+    end
+    it 'renders the ediit template' do 
+      expect(response).to render_template(:edit)
+    end
+  end
+  
+  describe 'Put update' do
+    subject { put :update, params: params }
+    
+    let!(:word) { create(:word, content: 'cat', language: language_1) }
+    let!(:language_1){ create(:language, name: 'English') }
+    let!(:language_2){ create(:language, name: 'Polish') }
+
+    context 'valid params' do
+      let(:params) do
+        {id: word, word: { content: 'kot', language_id: language_2.id } } 
+      end  
+      it 'updates word' do
+        expect { subject }
+          .to change {word.reload.content}
+          .from('cat')
+          .to('kot')
+          .and change {word.reload.language}
+          .from(language_1)
+          .to(language_2)
+      end
+    end 
+       
+    context 'invalid params' do
+      let(:params) do
+        {id: word, word: { content: '' } } 
+      end 
+
+      it 'does not update word' do
+        expect { subject }.not_to change { word.reload.content }
+      end
+    end
 
   end
 
