@@ -67,6 +67,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
+  gem 'faker'
   gem 'webdrivers'
   gem 'shoulda-matchers', '~> 5.0'
 end
