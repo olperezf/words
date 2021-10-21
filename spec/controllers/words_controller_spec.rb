@@ -27,39 +27,110 @@ RSpec.describe WordsController, type: :controller do
   end
 
   describe 'GET new' do
-    before { get :new }
+    context 'when user is signed in' do
+      let(:user) { FactoryBot.create(:user) }
 
-    it 'assigns @word' do 
-      expect(assigns(:word)).to be_a_new(Word)
-    end
-    it 'renders the new template' do 
-      expect(response).to render_template(:new)
-    end
+      before do
+        sign_in(user)
+        get :new
+      end
 
+      it 'assigns @word' do 
+        expect(assigns(:word)).to be_a_new(Word)
+      end
+
+      it 'renders the new template' do 
+        expect(response).to render_template(:new)
+      end
+
+      it do
+        expect(response).to have_http_status(200)
+      end
+    end
+    
+    context 'when user is NOT signed in' do
+      before do
+        get :new
+      end
+
+      it 'does not assign @word' do 
+        expect(assigns(:word)).to eq(nil)
+      end
+
+      it 'does not render the new template' do 
+        expect(response).not_to render_template(:new)
+      end
+
+      it do
+        expect(response).to have_http_status(302)
+      end
+    end
   end
 
   describe 'POST create' do
     subject { post :create, params: params }
-    
-    context 'valid params' do
-      let!(:language){ create(:language) }
-      let(:params) do
-        {word: { content: 'cat', language_id: language.id } } 
-      end  
-      it 'creates new word' do
-        expect { subject }.to change(Word, :count).from(0).to(1)
-      end
-    end
-    
-    context 'invalid params' do
-      let(:params) do
-        {word: { content: '' } } 
-      end  
-      it 'does not create new word' do
-        expect { subject }.not_to change(Word, :count)
-      end
-    end
+   
+    context 'when user is signed in' do
+      let(:user) { FactoryBot.create(:user) }
+      
+      before { sign_in(user) }
 
+      context 'valid params' do
+        let!(:language){ FactoryBot.create(:language) }
+        let(:params) do
+          {word: { content: 'cat', language_id: language.id } } 
+        end  
+        it 'creates new word' do
+          expect { subject }.to change(Word, :count).from(0).to(1)
+        end
+        it do
+          subject
+          expect(response).to have_http_status(302)
+        end
+      end
+      
+      context 'invalid params' do
+        let(:params) do
+          {word: { content: '' } } 
+        end  
+        it 'does not create new word' do
+          expect { subject }.not_to change(Word, :count)
+        end
+        it do
+          subject
+          expect(response).to have_http_status(200)
+        end
+      end
+    end
+    
+    context 'when user is NOT signed in' do
+      context 'valid params' do
+        let!(:language){ FactoryBot.create(:language) }
+        let(:params) do
+          {word: { content: 'cat', language_id: language.id } } 
+        end  
+        it 'does not create new word' do
+          expect { subject }.not_to change(Word, :count)
+        end
+        it do
+          subject
+          expect(response).to have_http_status(302)
+        end
+      end
+      
+      context 'invalid params' do
+        let(:params) do
+          {word: { content: '' } } 
+        end  
+        it 'does not create new word' do
+          expect { subject }.not_to change(Word, :count)
+        end
+        it do
+          subject
+          expect(response).to have_http_status(302)
+        end
+      end
+    end
   end
 
   describe 'GET show' do
