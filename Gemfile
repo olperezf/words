@@ -42,6 +42,8 @@ gem 'simple_form'
 
 gem 'language_list', '~> 1.2', '>= 1.2.1'
 
+gem 'devise'
+
 group :development, :test do
   gem 'pry-rails'
   gem 'rspec-rails', '~> 5.0.0'
