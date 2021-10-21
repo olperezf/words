@@ -1,5 +1,7 @@
 class WordsController < ApplicationController
 
+  before_action :set_word, only: [:show, :edit, :update, :destroy]
+
   def index
     @words = Word.all
   end
@@ -17,16 +19,7 @@ class WordsController < ApplicationController
     end  
   end
 
-  def show
-    @word = Word.find(params[:id])
-  end
-  
-  def edit
-    @word = Word.find(params[:id])
-  end
-  
   def update
-    @word = Word.find(params[:id])
     if @word.update(word_params)
       redirect_to(word_path(@word))
     else
@@ -35,7 +28,6 @@ class WordsController < ApplicationController
   end
   
   def destroy
-    @word = Word.find(params[:id])
     @word.destroy
     redirect_to(words_path)
   end
@@ -44,5 +36,9 @@ class WordsController < ApplicationController
 
   def word_params
     params.require(:word).permit(:content,:language_id) 
+  end
+
+  def set_word
+    @word = Word.find(params[:id])
   end
 end
