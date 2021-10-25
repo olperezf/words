@@ -45,6 +45,7 @@ gem 'language_list', '~> 1.2', '>= 1.2.1'
 gem 'devise'
 
 group :development, :test do
+  gem 'faker'
   gem 'pry-rails'
   gem 'rspec-rails', '~> 5.0.0'
   gem 'rails-controller-testing'
@@ -67,7 +68,6 @@ group :test do
   gem 'factory_bot_rails'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'faker'
   gem 'webdrivers'
   gem 'shoulda-matchers', '~> 5.0'
 end
