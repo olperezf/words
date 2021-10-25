@@ -155,10 +155,10 @@ RSpec.describe WordsController, type: :controller do
     let(:params) do
       { id: word.id }
     end  
-    let!(:word) { FactoryBot.create(:word) }
+    let!(:word) { FactoryBot.create(:word, user: user) }
+    let(:user) { FactoryBot.create(:user) }
     
     context 'when user is signed in' do
-      let(:user) { FactoryBot.create(:user) }
       
       before do
         sign_in(user)
@@ -188,12 +188,13 @@ RSpec.describe WordsController, type: :controller do
   describe 'Put update' do
     subject { put :update, params: params }
     
-    let!(:word) { FactoryBot.create(:word, content: 'cat', language: language_1) }
+    let!(:word) { FactoryBot.create(:word, user: user, content: 'cat', language: language_1) }
     let!(:language_1){ FactoryBot.create(:language, name: 'English') }
     let!(:language_2){ FactoryBot.create(:language, name: 'Polish') }
+    let(:user) { FactoryBot.create(:user) }
     
     context 'when user is signed in' do
-      let(:user) { FactoryBot.create(:user) }
+
       
       before do
         sign_in(user)
@@ -255,10 +256,11 @@ RSpec.describe WordsController, type: :controller do
   describe 'DELETE destroy' do
     subject { delete :destroy, params: params }
     
-    let!(:word) { FactoryBot.create(:word) }
+    let!(:word) { FactoryBot.create(:word, user: user) }
+    let(:user) { FactoryBot.create(:user) }
     
     context 'when user is signed in' do
-      let(:user) { FactoryBot.create(:user) }
+
       
       before do
         sign_in(user)
