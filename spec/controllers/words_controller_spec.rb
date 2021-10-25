@@ -5,7 +5,7 @@ RSpec.describe WordsController, type: :controller do
     before { get :index } 
     
     context 'when some words present' do
-      let!(:word){ create(:word) }
+      let!(:word){ FactoryBot.create(:word) }
 
       it 'assigns @words' do 
         expect(assigns(:words)).to eq([word])
@@ -65,7 +65,7 @@ RSpec.describe WordsController, type: :controller do
         expect(response).to have_http_status(302)
       end
     end
-  end
+   end
 
   describe 'POST create' do
     subject { post :create, params: params }
@@ -139,7 +139,7 @@ RSpec.describe WordsController, type: :controller do
     let(:params) do
       { id: word.id }
     end  
-    let!(:word) { create(:word) }
+    let!(:word) { FactoryBot.create(:word) }
 
     it 'assigns @word' do 
       expect(assigns(:word)).to eq(word)
@@ -155,7 +155,7 @@ RSpec.describe WordsController, type: :controller do
     let(:params) do
       { id: word.id }
     end  
-    let!(:word) { create(:word) }
+    let!(:word) { FactoryBot.create(:word) }
 
     it 'assigns @word' do 
       expect(assigns(:word)).to eq(word)
@@ -168,9 +168,9 @@ RSpec.describe WordsController, type: :controller do
   describe 'Put update' do
     subject { put :update, params: params }
     
-    let!(:word) { create(:word, content: 'cat', language: language_1) }
-    let!(:language_1){ create(:language, name: 'English') }
-    let!(:language_2){ create(:language, name: 'Polish') }
+    let!(:word) { FactoryBot.create(:word, content: 'cat', language: language_1) }
+    let!(:language_1){ FactoryBot.create(:language, name: 'English') }
+    let!(:language_2){ FactoryBot.create(:language, name: 'Polish') }
 
     context 'valid params' do
       let(:params) do
@@ -202,7 +202,7 @@ RSpec.describe WordsController, type: :controller do
   describe 'DELETE destroy' do
     subject { delete :destroy, params: params }
     
-    let!(:word) { create(:word) }
+    let!(:word) { FactoryBot.create(:word) }
 
     context 'valid params' do
       let(:params) do
