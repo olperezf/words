@@ -44,6 +44,8 @@ gem 'language_list', '~> 1.2', '>= 1.2.1'
 
 gem 'devise'
 
+gem 'pundit'
+
 group :development, :test do
   gem 'faker'
   gem 'pry-rails'
