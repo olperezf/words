@@ -48,6 +48,8 @@ gem 'pundit'
 
 gem 'kaminari'
 
+gem 'bootstrap4-kaminari-views'
+
 group :development, :test do
   gem 'faker'
   gem 'pry-rails'
