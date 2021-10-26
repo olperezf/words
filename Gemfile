@@ -46,6 +46,8 @@ gem 'devise'
 
 gem 'pundit'
 
+gem 'kaminari'
+
 group :development, :test do
   gem 'faker'
   gem 'pry-rails'
