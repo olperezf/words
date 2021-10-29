@@ -50,6 +50,8 @@ gem 'kaminari'
 
 gem 'bootstrap4-kaminari-views'
 
+gem 'cocoon'
+
 group :development, :test do
   gem 'faker'
   gem 'pry-rails'

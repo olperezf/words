@@ -1,4 +1,10 @@
 = simple_form_for @word do |f|
   = f.input :content
   = f.association :language
+  %h3 Translations
+  #translations
+    = f.simple_fields_for :translations do |t|
+      = render 'translation_fields', f: t
+    .links
+      = link_to_add_association 'Add a new translation', f, :translations
   = f.button :submit, class: 'btn btn-primary'

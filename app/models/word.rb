@@ -7,7 +7,7 @@ class Word < ApplicationRecord
   has_many :inverse_translations_association, class_name: 'Translation', foreign_key: 'translated_word_id'
   has_many :inverse_translations, through: :inverse_translations_association, source: :word
   
-  
+  accepts_nested_attributes_for :translations, reject_if: :all_blank, allow_destroy: true 
   validates :content , :language, presence: true
 
   paginates_per 10
