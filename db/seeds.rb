@@ -6,7 +6,9 @@ language_2 = Language.create(name: 'Spanish')
 
 5.times do
   word = Word.create(content: Faker::Lorem.word, language: language_1, user: user_1)
-  word = Word.create(content: Faker::Lorem.word, language: language_2, user: user_1)
+  translation_1 = Word.create(content: Faker::Lorem.word, language: language_2, user: user_1) 
+  translation_2 = Word.create(content: Faker::Lorem.word, language: language_2, user: user_1) 
+  word.translations <<  [translation_1, translation_2]
 end
 
 5.times do
