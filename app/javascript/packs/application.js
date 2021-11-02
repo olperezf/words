@@ -4,11 +4,14 @@
 // that code so it'll be compiled.
 require("jquery")
 require("@nathanvda/cocoon")
+global.toastr = require("toastr")
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'bootstrap'
+import "../stylesheets/application"
+
 
 Rails.start()
 Turbolinks.start()
