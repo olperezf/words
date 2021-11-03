@@ -41,7 +41,7 @@ RSpec.describe GamesController, type: :controller do
         { id: game.id }
       end  
       let!(:game) { FactoryBot.create(:game, user: user) }
-      let!(:word) { FactoryBot.create(:word) }
+      let!(:word) { FactoryBot.create(:word, :with_translations) }
 
       it 'assigns @game' do 
         subject
