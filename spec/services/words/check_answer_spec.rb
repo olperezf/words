@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Words::CheckAnswer do
   describe '#call' do
-    subject { described_class.new(word, game, answer).call }
+    subject { described_class.new(word, game, answer) }
     
     let(:game) { FactoryBot.create(:game) }
     
@@ -10,25 +10,35 @@ describe Words::CheckAnswer do
       let(:word) { FactoryBot.create(:word, :with_translations) }
       let(:answer) { word.translations.first.content }
 
-      it { is_expected.to eq(true) }
-      it do
-        expect { subject }.to change { game.reload.good_answers_count }.from(0).to(1)
+      it { expect(subject.call).to eq(true) }
+
+      it 'increments good answer count' do
+        expect { subject.call }.to change { game.reload.good_answers_count }.from(0).to(1)
       end
-      it do
-        expect { subject }.not_to change { game.reload.bad_answers_count }
+      it 'does not increment bad answer count' do
+        expect { subject.call }.not_to change { game.reload.bad_answers_count }
+      end
+
+      it 'returns proper message' do
+        expect(subject.message).to eq(I18n.t('check_answer.good_answer'))
       end
     end
+
 
     context 'when user provided bad answer' do
       let(:word) { FactoryBot.create(:word, :with_translations) }
       let(:answer) { 'qwe123' }
-      it { is_expected.to eq(false) }
+
+      it { expect(subject.call).to eq(false) }
       
-      it do
-        expect { subject }.to change { game.reload.bad_answers_count }.from(0).to(1)
+      it 'increments bad answer count' do
+        expect { subject.call }.to change { game.reload.bad_answers_count }.from(0).to(1)
       end
-      it do
-        expect { subject }.not_to change { game.reload.good_answers_count }
+      it 'does not increment good answer count' do
+        expect { subject.call }.not_to change { game.reload.good_answers_count }
+      end
+      it 'returns proper message' do
+        expect(subject.message).to eq(I18n.t('check_answer.bad_answer'))
       end
     end
 
