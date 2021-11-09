@@ -2,7 +2,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create]
 
   def create
-    checker = Words::CheckAnswer.new(word, game, answer).call  
+    checker = Words::CheckAnswer.new(word, game, answer)
+    checker.call
     redirect_back(fallback_location: root_url, notice: checker.message)
   end
 
@@ -20,4 +21,3 @@ class AnswersController < ApplicationController
     Game.find(params[:answer][:game_id])
   end
 end 
-
