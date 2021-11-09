@@ -3,7 +3,7 @@ require 'rails_helper'
 describe GamePolicy do
   subject { described_class }
 
-  permissions :show? do
+  permissions :access?, :show? do
     context 'when games does not belongs to user' do
       let(:game){ FactoryBot.build_stubbed(:game) }
       let(:user){ FactoryBot.build_stubbed(:user) }
