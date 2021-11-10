@@ -9,8 +9,12 @@
               - if user_signed_in?
                 %li.nav-item
                   = link_to('New word', new_word_url, class: 'nav-link')
-                %li.nav-item
-                  = link_to('Start game', games_url, method: :post , class: 'nav-link')
+                - if current_user.games.present?
+                  %li.nav-item
+                    = link_to('Continue game', game_url(current_user.games.last), class: 'nav-link')
+                - else  
+                  %li.nav-item
+                    = link_to('Start new game', games_url, method: :post , class: 'nav-link')
               - if user_signed_in?
                 %li.nav-item
                   = link_to('Edit registration', edit_user_registration_url, class: 'nav-link')
