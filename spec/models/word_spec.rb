@@ -15,6 +15,7 @@ RSpec.describe Word, type: :model do
     it do 
       is_expected.to have_many(:translations_association)
         .class_name('Translation')
+        .dependent(:destroy)
     end  
     it do 
       is_expected.to have_many(:translations)
@@ -26,6 +27,7 @@ RSpec.describe Word, type: :model do
       is_expected.to have_many(:inverse_translations_association)
         .class_name('Translation')
         .with_foreign_key('translated_word_id')
+        .dependent(:destroy)
     end  
     it do 
       is_expected.to have_many(:inverse_translations)
