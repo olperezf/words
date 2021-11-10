@@ -13,9 +13,7 @@ class WordsController < ApplicationController
   def create
     @word = Word.new(word_params)
     @word.user = current_user
-    @word.translations.each do |translation|
-      translation.user = current_user
-    end
+    set_user_for_translations(@word)
     if @word.save
       redirect_to(words_path)
     else
