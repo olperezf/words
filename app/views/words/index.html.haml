@@ -27,5 +27,9 @@
           - if policy(word).edit?
             = link_to('Edit',edit_word_url(word), class: 'btn btn-primary')
           - if policy(word).destroy?
-            = link_to('Delete',word_url(word), class: 'btn btn-primary', method: :delete)
+            = link_to('Delete',
+              word_url(word), 
+              class: 'btn btn-primary', 
+              method: :delete, 
+              data: { confirm: 'Are you sure?' })
 = paginate @words, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm"
