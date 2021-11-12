@@ -24,4 +24,14 @@ Es una aplicación que cumple con:
 
 - **gem 'pundit':** Pundit proporciona un conjunto de ayudas que lo guían para aprovechar las clases regulares de Ruby y los patrones de diseño orientados a objetos para construir un sistema de autorización simple, robusto y escalable. https://github.com/varvet/pundit
 
-- **
+- **gem 'kaminari':** Un paginador sofisticado, limpio, potente, personalizable y basado en Scope & Engine para marcos de aplicaciones web y ORM modernos. https://github.com/kaminari/kaminari
+
+- **gem 'bootstrap4-kaminari-views':** Estilo Bootstrap 4 (probado para bootstrap 4.0.0) para Kaminari. https://github.com/KamilDzierbicki/bootstrap4-kaminari-views
+
+- **gem 'cocoon':** Cocoon facilita el manejo de formularios anidados. https://github.com/nathanvda/cocoon
+
+- **gem 'faker':** Esta gema es un puerto de la biblioteca Data :: Faker de Perl que genera datos falsos. https://github.com/faker-ruby/faker
+
+- **gem 'rspec-rails':** rspec-rails trae el marco de prueba RSpec a Ruby on Rails como una alternativa directa a su marco de prueba predeterminado. https://github.com/rspec/rspec-rails
+
+
