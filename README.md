@@ -34,4 +34,9 @@ Es una aplicación que cumple con:
 
 - **gem 'rspec-rails':** rspec-rails trae el marco de prueba RSpec a Ruby on Rails como una alternativa directa a su marco de prueba predeterminado. https://github.com/rspec/rspec-rails
 
+- **gem 'brakeman':** Brakeman es una herramienta de análisis estático que comprueba las aplicaciones de Ruby on Rails en busca de vulnerabilidades de seguridad. https://github.com/presidentbeef/brakeman
+
+- **gem 'factory_bot_rails':** Factory Bot es una biblioteca que proporciona métodos de fábrica para crear dispositivos de prueba para pruebas de software automatizadas. Los objetos de accesorios se pueden crear sobre la marcha; pueden ser objetos Ruby simples con un estado predefinido, objetos ORM con registros de base de datos existentes u objetos simulados. Factory Bot se utiliza a menudo para probar aplicaciones Ruby on Rails; donde reemplaza el mecanismo de fijación incorporado de Rails. La configuración predeterminada de Rails utiliza una base de datos precargada como accesorios de prueba, que son globales para el conjunto de pruebas completo. Factory Bot, por otro lado, permite a los desarrolladores definir una configuración diferente para cada prueba y, por lo tanto, ayuda a evitar dependencias dentro de la suite de pruebas. https://github.com/thoughtbot/factory_bot_rails
+
+- **gem 'shoulda-matchers':** Shoulda Matchers proporciona una sola línea compatible con RSpec- y Minitest para probar la funcionalidad común de Rails que, si se escribiera a mano, sería mucho más larga, más compleja y propensa a errores. https://github.com/thoughtbot/shoulda-matchers
 
