@@ -1,24 +1,27 @@
-# README
+# Ruby On Rails 6 TDD - RSpec
+## Aplicación donde se podrá aprender el vocabulario del idioma Ingles (u otros idiomas haciendo alguna modificación en el código).
+El Objetivo del desarrollo de ésta aplicación es aprender como manejar Test-Driven Development basado en Rspec
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Es una aplicación que cumple con: 
+- las funciones básicas CRUD. 
+- Validaciones. 
+- Boostrapt en las vistas.
+- Registrar un usuario para iniciar sessión.
+- Editar el usuario y password.
+- RSpec para las pruebas de lógica en los módelos y controladores, entre otros ...
 
-Things you may want to cover:
+### Gemas utilizadas en esta aplicación:
 
-* Ruby version
+- **gem 'haml-rails':** Haml es un lenguage de marcas principalmente usado con Ruby, de forma simple y limpia describe el HTML de cualquier documento web. Es una alternativa popular respecto a usar el lenguage de plantilla de Rails (.erb) y permite embeber código Ruby. Apunta a reducir la repetición en tus anotaciones cerrando los tags, basándose en la estructura de identación del código. El resultado es una anotación bien estructurada, que no se repite, lógica y fácil de leer. https://github.com/haml/haml-rails
 
-* System dependencies
+- **gem 'rexml':** Un kit de herramientas XML para Ruby, rexml admite el análisis de documentos tanto en árbol como en flujo. El análisis de secuencias es más rápido. https://github.com/ruby/rexml
 
-* Configuration
+- **gem 'simple_form':** Simple Form tiene como objetivo ser lo más flexible posible. El objetivo básico de Simple Form es no tocar su forma de definir el diseño. https://github.com/heartcombo/simple_form
 
-* Database creation
+- **gem 'language_list':** Una lista de idiomas basada en ISO-639-1 e ISO-639-3 con funciones para recuperar solo idiomas comunes.
 
-* Database initialization
+- **gem 'devise':** Devise es una solución de autenticación flexible para Rails. https://github.com/heartcombo/devise
 
-* How to run the test suite
+- **gem 'pundit':** Pundit proporciona un conjunto de ayudas que lo guían para aprovechar las clases regulares de Ruby y los patrones de diseño orientados a objetos para construir un sistema de autorización simple, robusto y escalable. https://github.com/varvet/pundit
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- **
