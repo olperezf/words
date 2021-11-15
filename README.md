@@ -13,6 +13,9 @@ Es una aplicación que cumple con:
 
 ### Gemas utilizadas en la aplicación
 
+<details>
+     <summary> Ver Gemas... </summary>
+  
 - **gem 'haml-rails':** Haml es un lenguage de marcas principalmente usado con Ruby, de forma simple y limpia describe el HTML de cualquier documento web. Es una alternativa popular respecto a usar el lenguage de plantilla de Rails (.erb) y permite embeber código Ruby. Apunta a reducir la repetición en tus anotaciones cerrando los tags, basándose en la estructura de identación del código. El resultado es una anotación bien estructurada, que no se repite, lógica y fácil de leer. https://github.com/haml/haml-rails
 
 - **gem 'rexml':** Un kit de herramientas XML para Ruby, rexml admite el análisis de documentos tanto en árbol como en flujo. El análisis de secuencias es más rápido. https://github.com/ruby/rexml
@@ -41,5 +44,61 @@ Es una aplicación que cumple con:
 
 - **gem 'shoulda-matchers':** Shoulda Matchers proporciona una sola línea compatible con RSpec- y Minitest para probar la funcionalidad común de Rails que, si se escribiera a mano, sería mucho más larga, más compleja y propensa a errores. https://github.com/thoughtbot/shoulda-matchers
 
+</details>   
+  
 ### Vistas de la aplicación
+
+<details>
+     <summary> Ver Vistas... </summary> 
+  
+  
+- Index principal de la aplicación, se puede observar que tiene contenido, lenguaje, usuario, la cantidad de traducciones y sus acciones.
+  En la barra superior izquierda tiene el link para registrarse y para iniciar sesión.
+    
+![alt text](https://github.com/olperezf/words/blob/master/images/index.jpg?raw=true)  
+  
+  
+- Index cuando el usuario ha iniciado sesión, se puede observar que tienes las acciones de mostrar, editar y borrar palabra.
+  En la barra superior izquierda se habilitó el link de crear nuevas palabras, continuar con el juego de palabras, 
+  editar el perfil del registro y salir de la sesión.
+  
+![alt text](https://github.com/olperezf/words/blob/master/images/index_logueado.jpg?raw=true) 
+  
+- Pantalla para iniciar sesión
+  
+![alt text](https://github.com/olperezf/words/blob/master/images/login.jpg?raw=true) 
+  
+- Pantalla para registrarse
+  
+![alt text](https://github.com/olperezf/words/blob/master/images/register.jpg?raw=true)  
+  
+- Pantalla para registrar las palabras
+  
+![alt text](https://github.com/olperezf/words/blob/master/images/nueva_palabra.jpg?raw=true)
+  
+- Para observar esta vista seleccionar el link de continue game para jugar con el vocabulario.
+  Aparecerá de manera aleatoria las palabras en español y luego colocar la palabra correcta en ingles.
+  si incorrecta o buena la respuestas, se observará en las columnas respectivas, y  dependiendo de las
+  respuestas se tiene el porcentaje de exactitud.
+  
+![alt text](https://github.com/olperezf/words/blob/master/images/game.jpg?raw=true)  
+  
+</details> 
+
+### Introducción al Rspec
+
+RSpec es una herramienta de prueba para Ruby. Es la biblioteca de pruebas más utilizada para Ruby en aplicaciones de producción, en esencia es una herramienta simple que puede comenzar a usar con bastante rapidez.
+
+La idea del desarrollo impulsado por pruebas (TDD) fue llevada por primera vez a una audiencia más amplia por Kent Beck en su libro de 2000 Extreme Programming Explained. En lugar de escribir siempre pruebas para algún código que ya tenemos, trabajamos en un bucle rojo-verde:
+
+- Escriba el caso de prueba más pequeño posible que coincida con lo que necesitamos programar.
+- Ejecute la prueba y observe cómo falla. Esto le hace pensar en cómo escribir solo el código que lo hace pasar.
+- Escribe un código para que la prueba pase.
+- Ejecute su suite de pruebas. Repita los pasos 3 y 4 hasta que pasen todas las pruebas.
+- Regrese y refactorice su nuevo código, haciéndolo lo más simple y claro posible mientras mantiene verde el conjunto de pruebas.
+
+Este flujo de trabajo implica un "paso cero": tomarse el tiempo para pensar detenidamente qué es exactamente lo que necesitamos construir y cómo. Cuando siempre comenzamos con la implementación, es fácil perder el enfoque, escribir código innecesario y atascarse.
+
+Para trabajar de una manera ordenada nos enfocamos en testear primero models, helpers y services. Y luego en controllers y feature tests para las views.
+
 
