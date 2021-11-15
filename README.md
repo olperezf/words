@@ -17,6 +17,45 @@ Es una aplicación que cumple con:
      <summary> Ver Gemas... </summary>
   
 - **gem 'haml-rails':** Haml es un lenguage de marcas principalmente usado con Ruby, de forma simple y limpia describe el HTML de cualquier documento web. Es una alternativa popular respecto a usar el lenguage de plantilla de Rails (.erb) y permite embeber código Ruby. Apunta a reducir la repetición en tus anotaciones cerrando los tags, basándose en la estructura de identación del código. El resultado es una anotación bien estructurada, que no se repite, lógica y fácil de leer. https://github.com/haml/haml-rails
+     
+     Ejemplo de la vista index con Haml:
+     
+          %h1 All words
+          %table.table
+            %thead
+              %tr
+                %th
+                  \#
+                %th
+                  Content
+                %th
+                  Language
+                %th
+                  User
+                %th
+                  Translations Count
+                %th
+                  Actions
+            %tbody
+              - @words.each do |word|
+                %tr
+                  %td=word.id
+                  %td=word.content
+                  %td=word.language.name
+                  %td=word.user.secret_email
+                  %td=word.translations.size
+                  %td
+                    = link_to('Show',word_url(word), class: 'btn btn-primary')
+                    - if policy(word).edit?
+                      = link_to('Edit',edit_word_url(word), class: 'btn btn-primary')
+                    - if policy(word).destroy?
+                      = link_to('Delete',
+                        word_url(word), 
+                        class: 'btn btn-primary', 
+                        method: :delete, 
+                        data: { confirm: 'Are you sure?' })
+          = paginate @words, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm"
+     
 
 - **gem 'rexml':** Un kit de herramientas XML para Ruby, rexml admite el análisis de documentos tanto en árbol como en flujo. El análisis de secuencias es más rápido. https://github.com/ruby/rexml
 
@@ -55,7 +94,8 @@ Es una aplicación que cumple con:
 - Index principal de la aplicación, se puede observar que tiene contenido, lenguaje, usuario, la cantidad de traducciones y sus acciones.
   En la barra superior izquierda tiene el link para registrarse y para iniciar sesión.
     
-![alt text](https://github.com/olperezf/words/blob/master/images/index.jpg?raw=true)  
+![alt text](https://github.com/olperezf/words/blob/master/images/index.jpg?raw=true)
+     
   
   
 - Index cuando el usuario ha iniciado sesión, se puede observar que tienes las acciones de mostrar, editar y borrar palabra.
