@@ -167,7 +167,7 @@ Consultar para mayor informnación: https://github.com/rspec/rspec-rails
 
 ### Modelo - Rspec
 
-La aplicación tiene varios modelos con sus pruebas. Para la explicación nos enfocaremos en un modelo Word
+La aplicación tiene varios modelos con sus pruebas. Para la explicación nos enfocaremos en el modelo Word
 
 Cuando generamos un modelo por ejemplo Word (modelo de la aplicación), ejecutamos:
 
@@ -256,9 +256,9 @@ Ahora el siguiente paso es ejecutar la prueba con los siguientes comandos:
 
 - Para ejecutar una prueba en especifico utilizamos rspec y la ruta del archivo:
 
-          $ rspec rspec spec/models/word_spec.rb
+          $ rspec spec/models/word_spec.rb
           
-Ejecutando la prueba observamos la consola que todo esta bien!!:
+Ejecutando la prueba observamos la consola:
 
     Finished in 0.0241 seconds (files took 1.45 seconds to load)
     1 example, 0 failures  --> aquí se puede observar que tenemos un ejemplo ejecutado y todo salio en verde!!!
@@ -281,7 +281,9 @@ Ahora si ponemos una columna que no corresponda con el nombre verdadero, como po
 
      rspec ./spec/models/word_spec.rb:5 # Word columns is expected to have db column named valor
      
-  Hasta ahora he explicado detalladamente como se ejecuta una prueba sencilla en el modelo, ahora mostraré las siguientes pruebas de como asociar, validar y anidar los atributos; mostraré como está la lógica en el modelo Word y el modelo word_spec y lo vamos a ir analizando:
+Hasta ahora se ha visto detalladamente como se ejecuta una prueba sencilla en el modelo. 
+Las siguientes pruebas está basado en como asociar, validar y anidar los modelos,atributos, etc... 
+A continuación expondré la lógica del modelo Word y el modelo word_spec, con sus análisis:
   
 - Modelo Word:
 
@@ -380,4 +382,138 @@ Ahora si ponemos una columna que no corresponda con el nombre verdadero, como po
                 end
 
               end
+              
+Análisis:
+
+En el modelo Word tenemos las siguientes asociaciones:
+
+      belongs_to :language
+      belongs_to :user
+
+      has_many :translations_association, class_name: 'Translation', dependent: :destroy
+      has_many :translations, through: :translations_association, source: :translated_word
+      has_many :inverse_translations_association, class_name: 'Translation', foreign_key: 'translated_word_id', dependent: :destroy
+      has_many :inverse_translations, through: :inverse_translations_association, source: :word
+     
+Y en el modelo word_spec lo validamos con la siguiente sintaxis:
+
+     describe 'associations' do
+     
+        Para belongs_to :language 
+          it { is_expected.to belong_to(:language) }
+          
+        Para belongs_to :user 
+          it { is_expected.to belong_to(:user) }
+        
+        Para has_many :translations_association, class_name: 'Translation', dependent: :destroy 
+          it do 
+           is_expected.to have_many(:translations_association)
+             .class_name('Translation')
+             .dependent(:destroy)
+          end 
+          
+        Para has_many :translations, through: :translations_association, source: :translated_word
+          it do 
+           is_expected.to have_many(:translations)
+             .through(:translations_association)
+             .source(:translated_word)
+          end
+          
+        Para has_many :inverse_translations_association, class_name: 'Translation', foreign_key: 'translated_word_id', dependent: :destroy
+          it do 
+           is_expected.to have_many(:inverse_translations_association)
+             .class_name('Translation')
+             .with_foreign_key('translated_word_id')
+             .dependent(:destroy)
+          end 
+          
+        Para has_many :inverse_translations, through: :inverse_translations_association, source: :word
+          it do 
+           is_expected.to have_many(:inverse_translations)
+             .through(:inverse_translations_association)
+             .source(:word)
+             # .class_name('Translation')
+          end
+     end
+     
+Se puede observar tambien que para escribir una prueba en una linea se utiliza: 
+
+     it { ... }
+   
+En varias líneas:
+
+     it do
+       ...
+     end
+     
+Para validar la anidación del modelo Word
+
+     accepts_nested_attributes_for :translations, reject_if: :all_blank, allow_destroy: true
+ 
+En word_spec su sintaxis es:
+
+     describe 'nested_attributes' do
+       it { is_expected.to accept_nested_attributes_for(:translations).allow_destroy(true) }
+     end
+     
+Y por último tenemos en el modelo Word las validaciones:
+
+     validates :content, :language, presence: true
+     validate :translations_cannot_be_in_the_same_language_as_word
+     
+     private
+
+     def translations_cannot_be_in_the_same_language_as_word 
+       return if translations.none? { |translation| translation.language == language } 
+       errors.add(:language, 'must be different than language of translations.') 
+     end
+     
+Y para word_spec lo validamos:
+
+       describe 'validations' do
+       
+        Para validates :content, :language, presence: true  (solo necesito que este presente :content)
+        
+         it { is_expected.to validate_presence_of(:content) }
+
+        Para validate :translations_cannot_be_in_the_same_language_as_word
+        
+         describe 'translations_cannot_be_in_the_same_language_as_word' do
+           let(:language_1) { FactoryBot.create(:language) }
+           let(:word_1) { FactoryBot.build(:word, language: language_1) }
+
+           En este contexto validamos cuando las traducciones esta en el mismo lenguaje 
+           
+           context 'when translations is in the same language' do
+             let(:word_2) { FactoryBot.build(:word, language: language_1) }
+             before do
+               word_1.translations = [word_2]
+             end
+             it do
+               expect(word_1).to be_invalid
+             end
+           end
+
+           En este contexto validamos cuando las traducciones no están en el mismo lenguaje
+           
+           context 'when translations is NOT in the same language' do
+             let(:language_2) { FactoryBot.create(:language, :spanish) }
+             let(:word_2) { FactoryBot.build(:word, language: language_2) }
+             before do
+               word_1.translations = [word_2]
+             end
+             it do
+               expect(word_1).to be_valid
+             end
+           end
+           
+         end
+       end
+       
+Explicación del flujo de validaciones de 'translations_cannot_be_in_the_same_language_as_word'
+
+
+         
+
+
 
