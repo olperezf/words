@@ -165,7 +165,7 @@ Consultar la Versión de la Gema: https://rubygems.org/gems/rspec-rails
  
 Consultar para mayor informnación: https://github.com/rspec/rspec-rails
 
-### Modelo - Rspec
+### Modelo - Rspec  ( Word )
 
 La aplicación tiene varios modelos con sus pruebas. Para la explicación nos enfocaremos en el modelo Word
 
@@ -510,10 +510,49 @@ Y para word_spec lo validamos:
          end
        end
        
-Explicación del flujo de validaciones de 'translations_cannot_be_in_the_same_language_as_word'
 
+Revisando el código nos encontramos con un una instrucción: FactoryBot, (anteriormente conocido como Factory Girl) es una Gema de biblioteca específica de Ruby. Crea accesorios de prueba, estos accesorios de prueba se pueden usar como una herramienta para ayudar con las pruebas automatizadas. “Un accesorio de prueba es un estado fijo de un conjunto de objetos que se utiliza como línea de base para ejecutar pruebas. El propósito es garantizar que exista un entorno bien conocido y fijo en el que se ejecuten las pruebas para que los resultados sean repetibles ".
 
-         
+En otras palabras, Factory Bot crea accesorios de prueba que son objetos de prueba falsos que se pueden reutilizar durante la prueba de una aplicación.
 
+Los accesorios de prueba de Factory Bot le permite probar sus modelos y código sin tocar su base de datos. Factory Bot aún puede simular una base de datos muy de cerca con diferentes características de método.
+
+Para instalar FactoryBot agregar en Gemfile la Gema y luego ejecutar bundle install:
+
+     group :development, :test do
+       gem 'factory_bot_rails'
+     end
+     
+De forma predeterminada, factory_bot_rails cargará automáticamente las fábricas definidas en las siguientes ubicaciones, en relación con la raíz del proyecto Rails:
+
+     factories.rb
+     test/factories.rb
+     spec/factories.rb
+     factories/*.rb
+     test/factories/*.rb
+     spec/factories/*.rb
+    
+     
+Para mayor información: https://github.com/thoughtbot/factory_bot_rails
+
+Ahora vamos a la ruta spec/factories/ y agregamos un archivo llamado word.rb donde contendrá la fábrica de datos para las pruebas. Dentro del archivo se tiene:
+
+     FactoryBot.define do
+       factory :word do
+         content { Faker::Lorem.word }
+         language
+         user
+
+         trait :with_translations do
+           after(:create) do |word|
+             word.translations << create_list(:word,2)
+           end
+         end
+       end
+     end
+
+Continuamos... Explicación del flujo de validaciones de 'translations_cannot_be_in_the_same_language_as_word'
+
+Let
 
 
