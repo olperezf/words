@@ -282,8 +282,8 @@ Ahora si ponemos una columna que no corresponda con el nombre verdadero, como po
      rspec ./spec/models/word_spec.rb:5 # Word columns is expected to have db column named valor
      
 Hasta ahora se ha visto detalladamente como se ejecuta una prueba sencilla en el modelo. 
-Las siguientes pruebas está basado en como asociar, validar y anidar los modelos,atributos, etc... 
-A continuación expondré la lógica del modelo Word y el modelo word_spec, con sus análisis:
+Las siguientes pruebas está basado en como validar, anidar y asociar modelos,atributos, etc... 
+A continuación expondré la lógica del modelo Word con su modelo de prueba word_spec. Analizando:
   
 - Modelo Word:
 
@@ -446,7 +446,7 @@ En varias líneas:
        ...
      end
      
-Para validar la anidación del modelo Word
+Para validar la anidación del siguiente código
 
      accepts_nested_attributes_for :translations, reject_if: :all_blank, allow_destroy: true
  
@@ -468,7 +468,7 @@ Y por último tenemos en el modelo Word las validaciones:
        errors.add(:language, 'must be different than language of translations.') 
      end
      
-Y para word_spec lo validamos:
+Y en word_spec lo validamos:
 
        describe 'validations' do
        
@@ -511,7 +511,7 @@ Y para word_spec lo validamos:
        end
        
 
-Revisando el código nos encontramos con un una instrucción: FactoryBot, (anteriormente conocido como Factory Girl) es una Gema de biblioteca específica de Ruby. Crea accesorios de prueba, estos accesorios de prueba se pueden usar como una herramienta para ayudar con las pruebas automatizadas. “Un accesorio de prueba es un estado fijo de un conjunto de objetos que se utiliza como línea de base para ejecutar pruebas. El propósito es garantizar que exista un entorno bien conocido y fijo en el que se ejecuten las pruebas para que los resultados sean repetibles ".
+Revisando el código de arriba nos encontramos con un una instrucción: FactoryBot, (anteriormente conocido como Factory Girl) es una Gema de biblioteca específica de Ruby. Crea accesorios de prueba, estos accesorios de prueba se pueden usar como una herramienta para ayudar con las pruebas automatizadas. “Un accesorio de prueba es un estado fijo de un conjunto de objetos que se utiliza como línea de base para ejecutar pruebas. El propósito es garantizar que exista un entorno bien conocido y fijo en el que se ejecuten las pruebas para que los resultados sean repetibles ".
 
 En otras palabras, Factory Bot crea accesorios de prueba que son objetos de prueba falsos que se pueden reutilizar durante la prueba de una aplicación.
 
@@ -535,24 +535,37 @@ De forma predeterminada, factory_bot_rails cargará automáticamente las fábric
      
 Para mayor información: https://github.com/thoughtbot/factory_bot_rails
 
-Ahora vamos a la ruta spec/factories/ y agregamos un archivo llamado word.rb donde contendrá la fábrica de datos para las pruebas. Dentro del archivo se tiene:
+Ahora si queremos crear nuestra fábrica de datos para las pruebas vamos a esta ruta spec/factories/ y creamos el archivo; en ésta aplicación podemos observar que tenemos varios archivos: game.rb, language.rb, user.rb y word.rb . Vamos a poner como ejemplo language.rb : 
 
      FactoryBot.define do
-       factory :word do
-         content { Faker::Lorem.word }
-         language
-         user
+       factory :language do
+         name { 'English' }
 
-         trait :with_translations do
-           after(:create) do |word|
-             word.translations << create_list(:word,2)
-           end
+         trait :spanish do
+           name { 'Spanish' }
          end
        end
      end
+     
+Los traits permiten agrupar atributos que se pueden aplicar a cualquier fábrica.
 
-Continuamos... Explicación del flujo de validaciones de 'translations_cannot_be_in_the_same_language_as_word'
+Continuamos... Explicación del código dentro de 'translations_cannot_be_in_the_same_language_as_word'
 
-Let
+     let(:language_1) { FactoryBot.create(:language) }
+     
+     let(:word_1) { FactoryBot.build(:word, language: language_1) }
+     
+     before do
+       word_1.translations = [word_2]
+     end
 
+En FactoryBot.create(:language) -- > Creará el objeto de :language y todas las asociaciones para él. Todos se conservarán en la base de datos. Además, activará validaciones tanto del modelo como de la base de datos. 
+
+En FactoryBot.build(:word, language: language_1) -- > No guardará el objeto :word, pero aún hará solicitudes a una base de datos si la fábrica tiene asociaciones en nuestro caso :language . Activará validaciones solo para objetos asociados.
+
+La instrucción let(:language_1), let define un método auxiliar memorizado. El valor se almacenará en la variable :language_1, en caché en varias llamadas en el mismo bloque "it", pero no en varios bloques it. Tenga en cuenta que let tiene una evaluación diferida: no se evalúa hasta la primera vez que se invoca el método que define :language_1.
+
+Instrucción before do es equivalente a before :each do : ejecuta el bloque una vez antes de cada una de sus especificaciones en el archivo.
+
+Hasta aquí hemos visto todo concerniente a las pruebas basado en el Modelo.
 
