@@ -547,9 +547,11 @@ Ahora si queremos crear nuestra fábrica de datos para las pruebas vamos a esta 
        end
      end
      
-Los traits permiten agrupar atributos que se pueden aplicar a cualquier fábrica.
+Los traits permiten agrupar atributos que se pueden aplicar a cualquier fábrica, por ejemplo, para hacer la llamada a éste Factory con su trait se escribe: 
 
-Continuamos... Explicación del código dentro de 'translations_cannot_be_in_the_same_language_as_word'
+     FactoryBot.create(:language, :spanish)
+
+Continuamos... Explicación de varias líneas importantes dentro de 'translations_cannot_be_in_the_same_language_as_word'
 
      let(:language_1) { FactoryBot.create(:language) }
      
@@ -567,5 +569,4 @@ La instrucción let(:language_1), let define un método auxiliar memorizado. El 
 
 Instrucción before do es equivalente a before :each do : ejecuta el bloque una vez antes de cada una de sus especificaciones en el archivo.
 
-Hasta aquí hemos visto todo concerniente a las pruebas basado en el Modelo.
-
+Hasta aquí hemos visto lo básico y un poco más, concerniente a las pruebas basado en el Modelo.
