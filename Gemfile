@@ -60,7 +60,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'yard', '~> 0.8.7.6'
+  gem "yard", ">= 0.9.20"
   gem 'brakeman'
   gem 'bundler-audit'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
