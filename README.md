@@ -570,3 +570,139 @@ La instrucción let(:language_1), let define un método auxiliar memorizado. El 
 Instrucción before do es equivalente a before :each do : ejecuta el bloque una vez antes de cada una de sus especificaciones en el archivo.
 
 Hasta aquí hemos visto lo básico y un poco más, concerniente a las pruebas basado en el Modelo.
+
+
+### Servicios - Rspec
+
+En la siguiente ruta tenemos el servicio que vamos analizar app/services/words/check_answer.rb, check_answer.rb es un módulo que chequea si
+la respuesta es válida o no es válida.
+
+- Module Words:
+
+      module Words
+        class CheckAnswer
+          def initialize(word, game, answer)
+            @word = word
+            @answer = answer
+            @game = game
+          end
+
+          def call
+            update_game_stats(success: good_answer?)
+            good_answer?
+          end
+
+          def message
+            return I18n.t('check_answer.good_answer') if good_answer?
+            I18n.t('check_answer.bad_answer')
+          end
+
+          private
+
+          attr_reader :word, :game, :answer
+
+          def good_answer?
+            @good_answer ||= word.translations.where(content: answer).exists?
+          end
+
+          def update_game_stats(success:)
+            return game.increment!(:good_answers_count) if success == true
+            game.increment!(:bad_answers_count)
+          end
+        end
+      end
+
+
+Ahora, a continuación los tests del módulo en la siguiente ruta: spec/services/words/check_answer_spec.rb
+
+- Module Words spec:
+
+      require 'rails_helper'
+      describe Words::CheckAnswer do
+        describe '#call' do
+          subject { described_class.new(word, game, answer) }
+          
+          let(:game) { FactoryBot.create(:game) }
+          
+          context 'when user provided good answer'do
+            let(:word) { FactoryBot.create(:word, :with_translations) }
+            let(:answer) { word.translations.first.content }
+
+            it { expect(subject.call).to eq(true) }
+
+            it 'increments good answer count' do
+              expect { subject.call }.to change { game.reload.good_answers_count }.from(0).to(1)
+            end
+            it 'does not increment bad answer count' do
+              expect { subject.call }.not_to change { game.reload.bad_answers_count }
+            end
+
+            it 'returns proper message' do
+              expect(subject.message).to eq(I18n.t('check_answer.good_answer'))
+            end
+          end
+
+          context 'when user provided bad answer' do
+            let(:word) { FactoryBot.create(:word, :with_translations) }
+            let(:answer) { 'qwe123' }
+
+            it { expect(subject.call).to eq(false) }
+            
+            it 'increments bad answer count' do 
+              expect { subject.call }.to change { game.reload.bad_answers_count }.from(0).to(1)
+            end
+            it 'does not increment good answer count' do
+              expect { subject.call }.not_to change { game.reload.good_answers_count }
+            end
+            it 'returns proper message' do
+              expect(subject.message).to eq(I18n.t('check_answer.bad_answer'))
+            end
+          end
+
+
+Análisis:
+
+    subject { described_class.new(word, game, answer) }
+
+described_class: Devuelve la clase o módulo definido en el método describe (Words::CheckAnswer). Devuelve nil si el subject no es una clase o módulo
+
+El suject es el objeto que se está probando. RSpec tiene una idea explícita del subject. Puede estar definido o no. Si es así, RSpec puede llamar a métodos sin hacer referencia a él explícitamente. De forma predeterminada, si el primer argumento de un grupo ( describe o context bloque)de ejemplo más externo es una clase, RSpec crea una instancia de esa clase y la asigna al sujeto, por ejemplo:
+
+    class A
+    end
+
+    describe A do
+      it "is instantiated by RSpec" do
+          expect(subject).to be_an(A)
+      end
+    end
+
+
+En nuestro caso le estoy definiendo el subject instanciando la clase con described_class:
+    
+    subject { described_class.new(word, game, answer) }
+
+A continuación una parte del código para explicar el proceso de prueba:
+
+          
+          let(:game) { FactoryBot.create(:game) } -- > Estamos creando a game
+          
+          context 'when user provided good answer'do -- >  En este contexto evaluamos cuando tenemos una respuesta correcta.
+            let(:word) { FactoryBot.create(:word, :with_translations) } --> Creamos a word con su traducción.
+            let(:answer) { word.translations.first.content }  -- > Le asignamos a answer la respuesta correcta
+
+            it { expect(subject.call).to eq(true) } --> evaluamos  a la clase con subject, llamando al método call, esperando una respuesta, en este caso esperamos true para pasar el test.
+
+            it 'increments good answer count' do --> Cuando la respuesta es correcta incrementamos el contador
+              expect { subject.call }.to change { game.reload.good_answers_count }.from(0).to(1) --> Evaluamos un cambio, que el contador haya incrementado un punto
+            end
+            it 'does not increment bad answer count' do--> cuando la respuesta no es correcta no se incrementa nada
+              expect { subject.call }.not_to change { game.reload.bad_answers_count } --> No evaluamos cambio, que el contador no incremente.
+            end
+
+            it 'returns proper message' do --> Evaluamos el mensaje que sea el correcto
+              expect(subject.message).to eq(I18n.t('check_answer.good_answer')) --> Evaluamos que haya llamado al mensaje correcto
+            end
+          end
+
+
