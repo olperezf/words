@@ -706,3 +706,267 @@ A continuación una parte del código para explicar el proceso de prueba:
           end
 
 
+### Policies - Rspec
+
+En Policies evaluamos que el usuario este autorizado para hacer cambios en la aplicación. En la siguiente ruta app/Policies/word_policy.rb, tenemos la siguiente clase:
+
+- Class WordPolicy
+
+      class WordPolicy
+        attr_reader :user, :word
+
+        def initialize(user, word)
+          @user = user
+          @word = word
+        end
+
+        def edit?
+          word_belongs_to_user?
+        end
+
+        def update?
+          word_belongs_to_user?
+        end
+        
+        def destroy?
+          word_belongs_to_user?
+        end
+
+        private
+
+        def word_belongs_to_user?
+          user == word.user
+        end
+      end
+
+En la siguiente ruta se tiene los test de la clase WordPolicy spec/policies/word_policy_spec.rb
+
+- Clase WordPolicy spec:
+
+      require 'rails_helper'
+
+      describe WordPolicy do
+        subject { described_class }
+
+        permissions :update?, :edit?, :destroy? do
+          context 'when words does not belongs to user' do
+            let(:word){ FactoryBot.build_stubbed(:word) }
+            let(:user){ FactoryBot.build_stubbed(:user) }
+            
+            it 'denies access' do
+              expect(subject).not_to permit(user, word)
+            end
+          end
+          
+          context 'when words belongs to user' do
+            let(:word){ FactoryBot.build_stubbed(:word, user: user) }
+            let(:user){ FactoryBot.build_stubbed(:user) }
+            
+            it 'grants access' do
+              expect(subject).to permit(user, word)
+            end
+          end
+        end
+      end
+
+Análisis:
+
+    FactoryBot.build_stubbed(:word)  
+    
+No llama a la base de datos en absoluto. Crea y asigna atributos a un objeto (word) para que se comporte como un objeto instanciado. Proporciona una identificación falsa y created_at. Las asociaciones, si las hay, también se crearán a través de build_stubbed. No activará ninguna validación.
+
+Explicación de una parte del código:
+
+        permissions :update?, :edit?, :destroy? do --> permisos solo para actualizar, editar y eliminar.
+          context 'when words does not belongs to user' do --> contexto que evalua cuando las palabras no pertenece al usuario
+            let(:word){ FactoryBot.build_stubbed(:word) } --> Construcción del objeto word
+            let(:user){ FactoryBot.build_stubbed(:user) } --> Construcción del objeto user
+            
+            it 'denies access' do --> Evaluación para que se cumpla el acceso denegado
+              expect(subject).not_to permit(user, word)--> user es distinto del user asociado al word.
+            end
+          end
+          
+          context 'when words belongs to user' do --> cuando las palabras pertenece al usuario
+            let(:word){ FactoryBot.build_stubbed(:word, user: user) } --> Estamos Construyendo word con el usuario asociado
+            let(:user){ FactoryBot.build_stubbed(:user) }--> Estamos Construyendo usuario con la asociación de usuario de word
+            
+            it 'grants access' do --> Acceso exitoso
+              expect(subject).to permit(user, word)--> Acceso permitido ya que la palabra pertenece al usuario
+            end
+
+
+### Controller - Rspec
+
+Nos vamos a enfocar al controlador words_controller.rb, ruta: app/controllers/words_controller.rb :
+
+      class WordsController < ApplicationController
+        before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+        before_action :set_word, only: [:show, :edit, :update, :destroy]
+
+        def index
+          @words = Word.includes(:user, :language, :translations).page(params[:page])
+        end
+
+        def new
+          @word = current_user.words.new
+          @word.translations.new
+        end
+
+        def create
+          @word = Word.new(word_params)
+          @word.user = current_user
+          set_user_for_translations(@word)
+          if @word.save
+            redirect_to(words_path)
+          else
+            render :new
+          end  
+        end
+
+        def edit
+          authorize @word
+        end
+
+        def update
+          authorize @word
+          @word.assign_attributes(word_params)
+          set_user_for_translations(@word)
+          if @word.save
+            redirect_to(word_path(@word))
+          else
+            render :edit
+          end  
+        end
+        
+        def destroy
+          authorize @word
+          @word.destroy
+          redirect_to(words_path)
+        end
+        
+        private
+
+        def word_params
+          params
+            .require(:word)
+            .permit(
+              :content,
+              :language_id, 
+              translations_attributes: %i[id content language_id _destroy]
+            )
+        end
+
+        def set_word
+          @word = Word.find(params[:id])
+        end
+        
+        def set_user_for_translations(word)
+          word.translations.each do |translation|
+            translation.user = current_user
+          end
+        end
+      end
+
+
+Sólo vamos a enfocarnos para el análisis en el método create del controlador, ruta spec/controllers/words_controller_spec.rb :
+
+      
+      describe 'POST create' do --> describimos las pruebas para el método create
+          subject { post :create, params: params } --> Especificamos los parametros para el método post create
+         
+          context 'when user is signed in' do --> Contexto cuando el usuario  esta logueado
+            let(:user) { FactoryBot.create(:user) } --> Creamos el objeto user
+            
+            before { sign_in(user) } --> antes de cualquier accion asignamos user a sign_in
+
+            context 'valid params' do --> Validamos los parámetros
+              let!(:language_1){ FactoryBot.create(:language) } --> Creamos el objeto language asignando a la variable :language_1
+              let(:params) do
+                {word: { content: 'cat', language_id: language_1.id } } --> Asignamos valores a los parámetros
+               end  
+              it 'creates new word' do --> Bloque de prueba para crear nueva palabra
+                expect { subject }.to change(Word, :count).from(0).to(1) --> Especifica que hubo cambio en el objeto word creando la palabra, se observa en :count cuando se incrementa a 1. 
+              end
+              it do --> En éste bloque se evalua que la respuesta es exitosa con 302 para la creación.
+                subject
+                expect(response).to have_http_status(302)
+              end
+
+              context 'when some translation is present' do --> Cuando algunas traducciones esta presente.
+                 let!(:language_2){ FactoryBot.create(:language, :spanish) } --> Creamos el objeto language español asignando a language_2
+                let(:params) do --> Asignamos los valores correspondiente a los parametros
+                  {
+                    word: 
+                     { 
+                       content: 'cat', 
+                       language_id: language_1.id,
+                       translations_attributes:
+                         {
+                           '5847365027486' =>
+                             { 
+                               content: 'Gato',
+                               language_id: language_2.id,
+                               _destroy: false
+                            }
+                            
+                         } 
+                      }
+                  } 
+                end  
+                
+                it 'creates two words' do --> Bloque que evalua la creación de 2 palabras exitosamente
+                  expect { subject }.to change(Word, :count).from(0).to(2) --> Como se especifica en los parametros: hay cambio para 2 palabras, count aumenta a 2. 
+                end
+
+                it 'creates translation for first word' do --> Bloque evalua la creación de la traducción  para la primera palabra
+                  subject
+                  expect(Word.first.reload.translations.count).to eq(1) --> Se espera que la condición sea igual a 1 significando que si existe la traducción.
+                end
+              end
+
+            end
+            
+            context 'invalid params' do --> Contexto que evalua los parametros invalidos
+              let(:params) do --> asignamos vacío a params
+                {word: { content: '' } } 
+              end  
+              it 'does not create new word' do --> Bloque que evalua que no hay creación para una nueva palabra.
+                expect { subject }.not_to change(Word, :count) --> No hay cambio en Word
+              end
+              it do --> Evalua la respuesta en status 200 exitoso.
+                subject
+                expect(response).to have_http_status(200)
+              end
+            end
+          end
+          
+          context 'when user is NOT signed in' do --> Cuando el usuario no esta logueado
+            context 'valid params' do --> Parámetro válidos
+              let!(:language){ FactoryBot.create(:language) }--> Creación del objeto language
+              let(:params) do--> Asignamos valores a parametros
+                {word: { content: 'cat', language_id: language.id } } 
+              end  
+              it 'does not create new word' do --> Cuando no crea nueva palabras
+                expect { subject }.not_to change(Word, :count) --> No hay cambios en Word
+              end
+              it do 
+                subject
+                expect(response).to have_http_status(302)
+              end
+            end
+            
+            context 'invalid params' do --> Parametros invalido
+              let(:params) do --> Asigna vacío a parametros
+                {word: { content: '' } } 
+              end  
+              it 'does not create new word' do --> No hay creación de una nueva palabra
+                expect { subject }.not_to change(Word, :count)
+              end
+              it do
+                subject
+                expect(response).to have_http_status(302)
+              end
+            end
+          end
+        end
