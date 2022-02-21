@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'associations' do
-    it { is_expected.to have_many(:words) }
-    it { is_expected.to have_many(:games) }
+    it { should have_many(:words) }
+    it { should have_many(:games) }
   end
   
   describe '#secret_email' do
@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
     
     let(:user) { FactoryBot.build_stubbed(:user, email: 'john.test@example.com') } 
 
-    it { is_expected.to eq('john.####@example.com') }
+    it { should eq('john.####@example.com') }
   end
 
 end

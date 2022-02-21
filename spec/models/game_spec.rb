@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Game, type: :model do
   describe 'columns' do
-    it { is_expected.to have_db_column(:good_answers_count) }
-    it { is_expected.to have_db_column(:bad_answers_count) }
+    it { should have_db_column(:good_answers_count) }
+    it { should have_db_column(:bad_answers_count) }
   end
 
   
   describe 'associations' do
-    it { is_expected.to belong_to(:user) }
+    it { should belong_to(:user) }
   end
 
   describe '#correctness' do
@@ -28,13 +28,13 @@ RSpec.describe Game, type: :model do
     #   context 'when bad_answers_count is 0' do
     #     let(:bad_answers_count) { 0 }
         
-    #     it { is_expected.to eq('-') }
+    #     it { should eq('-') }
     #   end
       
     #   context 'when bad_answers_count is 1' do
     #     let(:bad_answers_count) { 1 }
         
-    #     it { is_expected.to eq('0.0%') }
+    #     it { should eq('0.0%') }
     #   end
     # end
     
@@ -44,13 +44,13 @@ RSpec.describe Game, type: :model do
     #   context 'when bad_answers_count is 0' do
     #     let(:bad_answers_count) { 0 }
         
-    #     it { is_expected.to eq('100.0%') }
+    #     it { should eq('100.0%') }
     #   end
       
     #   context 'when bad_answers_count is 1' do
     #     let(:bad_answers_count) { 1 }
         
-    #     it { is_expected.to eq('50.0%') }
+    #     it { should eq('50.0%') }
     #   end
     # end
     
@@ -60,7 +60,7 @@ RSpec.describe Game, type: :model do
     #   context 'when bad_answers_count is 4' do
     #     let(:bad_answers_count) { 4 }
         
-    #     it { is_expected.to eq('33.33%') }
+    #     it { should eq('33.33%') }
     #   end
     # end
   end
