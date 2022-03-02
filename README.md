@@ -240,7 +240,7 @@ Continuamos..., vamos al archivo spec/modelos/word_spec.rb y agregamos:
           
      RSpec.describe Word, type: :model do
         describe 'columns' do
-            it { is_expected.to have_db_column(:content) }
+            it { should have_db_column(:content) }
         end
      end
      
@@ -263,14 +263,14 @@ Ejecutando la prueba observamos la consola:
     Finished in 0.0241 seconds (files took 1.45 seconds to load)
     1 example, 0 failures  --> aquí se puede observar que tenemos un ejemplo ejecutado y todo salio en verde!!!
     
-Ahora si ponemos una columna que no corresponda con el nombre verdadero, como por ejemplo pongamos ":valor": it { is_expected.to have_db_column(:valor) }, muestra el siguiente error:
+Ahora si ponemos una columna que no corresponda con el nombre verdadero, como por ejemplo pongamos ":valor": it { should have_db_column(:valor) }, muestra el siguiente error:
 
      F
 
      Failures:
 
        1) Word columns is expected to have db column named valor
-          Failure/Error: it { is_expected.to have_db_column(:valor) }
+          Failure/Error: it { should have_db_column(:valor) }
             Expected Word to have db column named valor (Word does not have a db column named valor.)
           # ./spec/models/word_spec.rb:5:in `block (3 levels) in <top (required)>'
 
@@ -317,35 +317,35 @@ A continuación expondré la lógica del modelo Word con su modelo de prueba wor
 
           RSpec.describe Word, type: :model do
             describe 'columns' do
-              it { is_expected.to have_db_column(:valor) }
+              it { should have_db_column(:valor) }
             end
 
             describe 'nested_attributes' do
-              it { is_expected.to accept_nested_attributes_for(:translations).allow_destroy(true) }
+              it { should accept_nested_attributes_for(:translations).allow_destroy(true) }
             end
 
             describe 'associations' do
-              it { is_expected.to belong_to(:language) }
-              it { is_expected.to belong_to(:user) }
+              it { should belong_to(:language) }
+              it { should belong_to(:user) }
               it do 
-                is_expected.to have_many(:translations_association)
+                should have_many(:translations_association)
                   .class_name('Translation')
                   .dependent(:destroy)
               end  
               it do 
-                is_expected.to have_many(:translations)
+                should have_many(:translations)
                   .through(:translations_association)
                   .source(:translated_word)
                   # .class_name('Translation')
               end
               it do 
-                is_expected.to have_many(:inverse_translations_association)
+                should have_many(:inverse_translations_association)
                   .class_name('Translation')
                   .with_foreign_key('translated_word_id')
                   .dependent(:destroy)
               end  
               it do 
-                is_expected.to have_many(:inverse_translations)
+                should have_many(:inverse_translations)
                   .through(:inverse_translations_association)
                   .source(:word)
                   # .class_name('Translation')
@@ -353,7 +353,7 @@ A continuación expondré la lógica del modelo Word con su modelo de prueba wor
             end
 
             describe 'validations' do
-              it { is_expected.to validate_presence_of(:content) }
+              it { should validate_presence_of(:content) }
 
               describe 'translations_cannot_be_in_the_same_language_as_word' do
                 let(:language_1) { FactoryBot.create(:language) }
@@ -400,28 +400,28 @@ Y en el modelo word_spec lo validamos con la siguiente sintaxis:
      describe 'associations' do
      
         Para belongs_to :language 
-          it { is_expected.to belong_to(:language) }
+          it { should belong_to(:language) }
           
         Para belongs_to :user 
-          it { is_expected.to belong_to(:user) }
+          it { should belong_to(:user) }
         
         Para has_many :translations_association, class_name: 'Translation', dependent: :destroy 
           it do 
-           is_expected.to have_many(:translations_association)
+           should have_many(:translations_association)
              .class_name('Translation')
              .dependent(:destroy)
           end 
           
         Para has_many :translations, through: :translations_association, source: :translated_word
           it do 
-           is_expected.to have_many(:translations)
+           should have_many(:translations)
              .through(:translations_association)
              .source(:translated_word)
           end
           
         Para has_many :inverse_translations_association, class_name: 'Translation', foreign_key: 'translated_word_id', dependent: :destroy
           it do 
-           is_expected.to have_many(:inverse_translations_association)
+           should have_many(:inverse_translations_association)
              .class_name('Translation')
              .with_foreign_key('translated_word_id')
              .dependent(:destroy)
@@ -429,7 +429,7 @@ Y en el modelo word_spec lo validamos con la siguiente sintaxis:
           
         Para has_many :inverse_translations, through: :inverse_translations_association, source: :word
           it do 
-           is_expected.to have_many(:inverse_translations)
+           should have_many(:inverse_translations)
              .through(:inverse_translations_association)
              .source(:word)
              # .class_name('Translation')
@@ -453,7 +453,7 @@ Para validar la anidación del siguiente código
 En word_spec su sintaxis es:
 
      describe 'nested_attributes' do
-       it { is_expected.to accept_nested_attributes_for(:translations).allow_destroy(true) }
+       it { should accept_nested_attributes_for(:translations).allow_destroy(true) }
      end
      
 Y por último tenemos en el modelo Word las validaciones:
@@ -474,7 +474,7 @@ Y en word_spec lo validamos:
        
         Para validates :content, :language, presence: true  (solo necesito que este presente :content)
         
-         it { is_expected.to validate_presence_of(:content) }
+         it { should validate_presence_of(:content) }
 
         Para validate :translations_cannot_be_in_the_same_language_as_word
         
